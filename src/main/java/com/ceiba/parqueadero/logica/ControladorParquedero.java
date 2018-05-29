@@ -7,7 +7,7 @@ import com.ceiba.parqueadero.modelo.Vehiculo;
 
 public interface ControladorParquedero {
 
-	Factura ingresarVehiculo(Vehiculo v) throws Exception;
+	Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception;
 	
 	Factura calcularValorFactura(String placa);
 	
