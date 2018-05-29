@@ -3,7 +3,7 @@ package com.ceiba.parqueadero.modelo;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity(name="tipo_vehiculo")
+@Entity
 public class TipoVehiculo {
 	
 	@Id

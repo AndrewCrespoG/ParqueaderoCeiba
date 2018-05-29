@@ -19,7 +19,6 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	public Factura ingresarVehiculo(Vehiculo v) throws Exception {
 		
 		return null;
-		
 	}
 
 	@Override

@@ -3,14 +3,14 @@ package com.ceiba.parqueadero.modelo;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity(name="vehiculo")
+@Entity
 public class Vehiculo {
 
 	@Id
 	private String placa;
 	//private TipoVehiculo tipoVehiculo;
-	private String propietario;
 	private int cilindraje;
+	private String propietario;
 
 	public Vehiculo() {
 		//Constructor sin parametros
@@ -39,6 +39,13 @@ public class Vehiculo {
 	public void setCilindraje(int cilindraje) {
 		this.cilindraje = cilindraje;
 	}
-	
+
+	/*public TipoVehiculo getTipoVehiculo() {
+		return tipoVehiculo;
+	}
+
+	public void setTipoVehiculo(TipoVehiculo tipoVehiculo) {
+		this.tipoVehiculo = tipoVehiculo;
+	}*/
 	
 }
