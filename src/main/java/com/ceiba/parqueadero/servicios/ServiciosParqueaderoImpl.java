@@ -14,6 +14,7 @@ import com.ceiba.parqueadero.modelo.TipoVehiculo;
 import com.ceiba.parqueadero.modelo.Vehiculo;
 import com.ceiba.parqueadero.repositorio.RepositorioVehiculos;
 
+@RequestMapping(value="/parqueadero")
 @RestController
 public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 
@@ -24,8 +25,7 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	RepositorioVehiculos repositorioVehiculos;
 	
 	@Override
-	@CrossOrigin(origins="*")
-    @RequestMapping(value="/parqueadero/vehiculos", method = RequestMethod.POST)
+    @RequestMapping(value="/vehiculos", method = RequestMethod.POST)
 	public Factura ingresarVehiculo(@RequestBody Vehiculo vehiculo) throws Exception {
 		Vehiculo v = new Vehiculo();
 		try {
@@ -43,15 +43,16 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	}
 
 	@Override
+	
 	public Factura calcularValorFactura(String placa) {
 		
 		return null;
 	}
 
 	@Override
-	@RequestMapping(value="/parqueadero/todos-los-vehiculos", method = RequestMethod.GET)
+	@RequestMapping(value="/todos-los-vehiculos", method = RequestMethod.GET)
 	public List<Vehiculo> consultarVehiculosEnParqueadero(String parqueadero) {
-		Vehiculo v = new Vehiculo();
+		//Vehiculo v = new Vehiculo();
 		return null;
 	}
 
