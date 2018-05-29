@@ -1,17 +1,14 @@
 package com.ceiba.parqueadero.modelo;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity(name="vehiculo")
 public class Vehiculo {
 
 	@Id
-	public Long id;
-	
-	public String placa;
+	private Long id;
+	private String placa;
 
 	public String getPlaca() {
 		return placa;
@@ -19,6 +16,14 @@ public class Vehiculo {
 
 	public void setPlaca(String placa) {
 		this.placa = placa;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

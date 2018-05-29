@@ -20,10 +20,10 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	ControladorParquedero controladorParquedero;
 	
 	@Override
-	@CrossOrigin(origins="*")
-    @RequestMapping( path="/parqueadero/vehiculos", method = RequestMethod.POST)
-	public Factura ingresarVehiculo(@ RequestBody Vehiculo v) throws Exception {
-		System.out.println(v.getPlaca() + v.id);
+	//@CrossOrigin(origins="*")
+    @RequestMapping(path="/parqueadero/vehiculos", method = RequestMethod.POST)
+	public Factura ingresarVehiculo(@RequestBody Vehiculo v) throws Exception {
+		System.out.println(v.getPlaca() + v.getId());
 		return this.controladorParquedero.ingresarVehiculo(new Vehiculo());
 	}
 
