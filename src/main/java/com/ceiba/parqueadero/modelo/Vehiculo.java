@@ -7,8 +7,14 @@ import javax.persistence.Id;
 public class Vehiculo {
 
 	@Id
-	private Long id;
 	private String placa;
+	//private TipoVehiculo tipoVehiculo;
+	private String propietario;
+	private int cilindraje;
+
+	public Vehiculo() {
+		//Constructor sin parametros
+	}
 
 	public String getPlaca() {
 		return placa;
@@ -18,12 +24,21 @@ public class Vehiculo {
 		this.placa = placa;
 	}
 
-	public Long getId() {
-		return id;
+	public String getPropietario() {
+		return propietario;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setPropietario(String propietario) {
+		this.propietario = propietario;
 	}
 
+	public int getCilindraje() {
+		return cilindraje;
+	}
+
+	public void setCilindraje(int cilindraje) {
+		this.cilindraje = cilindraje;
+	}
+	
+	
 }
