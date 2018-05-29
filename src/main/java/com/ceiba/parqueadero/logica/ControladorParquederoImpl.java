@@ -28,7 +28,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 			return factura;
 		}
 		
-		throw new Exception("el vehucilo ya s¿ingreso");
+		throw new Exception("el vehucilo ya ha ingresadio");
 	}
 
 	@Override

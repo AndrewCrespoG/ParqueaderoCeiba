@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ceiba.parqueadero.ParqueaderoApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-05-29T13:05:23" hostname="ANDRES-CRESPO" time="0.001">
+  <properties/>
+  <testcase name="contextLoads" classname="com.ceiba.parqueadero.ParqueaderoApplicationTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
