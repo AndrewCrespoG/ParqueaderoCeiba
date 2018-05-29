@@ -44,13 +44,14 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 
 	@Override
 	public Factura calcularValorFactura(String placa) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
+	@RequestMapping(value="/parqueadero/todos-los-vehiculos", method = RequestMethod.GET)
 	public List<Vehiculo> consultarVehiculosEnParqueadero(String parqueadero) {
-		// TODO Auto-generated method stub
+		Vehiculo v = new Vehiculo();
 		return null;
 	}
 
