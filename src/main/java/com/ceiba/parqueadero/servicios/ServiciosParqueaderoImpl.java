@@ -1,10 +1,10 @@
 package com.ceiba.parqueadero.servicios;
 
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,23 +19,24 @@ import com.ceiba.parqueadero.repositorio.RepositorioVehiculos;
 public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 
 	//@Autowired
-	//ControladorParquedero controladorParquedero;
+	ControladorParquedero controladorParquedero;
 	
 	@Autowired
 	RepositorioVehiculos repositorioVehiculos;
 	
 	@Override
-	//@CrossOrigin(origins="*")
+	@CrossOrigin(origins="*")
     @RequestMapping(value="/parqueadero/vehiculos", consumes = "application/json", method = RequestMethod.POST)
-	//public Factura ingresarVehiculo(@RequestBody Vehiculo v) throws Exception {
-	public Factura ingresarVehiculo(@RequestBody String vehiculo) throws Exception {
+	public Factura ingresarVehiculo(@RequestBody Vehiculo vehiculo) throws Exception {
 		Vehiculo v = new Vehiculo();
 		try {
-			JSONObject objVehiculo = new JSONObject(vehiculo);
-			v.setId(objVehiculo.getLong("id"));
-			v.setPlaca(objVehiculo.getString("placa"));
+			//JSONObject objVehiculo = new JSONObject(vehiculo);
+			
+			//v.setId(objVehiculo.getLong("id"));
+			//v.setPlaca(objVehiculo.getString("placa"));
+			
 			repositorioVehiculos.save(v);
-		}catch(JSONException e) {
+		}catch(Exception e) {
 			e.getMessage();
 		}
 		

@@ -19,16 +19,19 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	@Override
 	public Factura ingresarVehiculo(Vehiculo v) throws Exception {
 		Optional<Vehiculo> vehiculo = repositorioVehiculos.findById(v.getPlaca());
-		repositorioVehiculos.save(v);
+		
+		
+		return null;
+		
+		/*repositorioVehiculos.save(v);
 		if(vehiculo.isPresent()) {
-			// 
 			repositorioVehiculos.save(v);
 			Factura factura = new Factura();
-			
 			return factura;
 		}
 		
-		throw new Exception("el vehucilo ya ha ingresadio");
+		*///throw new Exception("el vehiculo ya ha ingresadio");
+		
 	}
 
 	@Override
