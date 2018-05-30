@@ -9,7 +9,7 @@ public interface ControladorParquedero {
 
 	Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception;
 	
-	Factura calcularValorFactura(String placa);
+	Factura calcularValorFactura(String placa) throws Exception;
 	
 	List<Vehiculo> consultarVehiculosEnParqueadero (String parqueadero);
 }

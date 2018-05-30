@@ -3,16 +3,21 @@ package com.ceiba.parqueadero.modelo;
 import java.util.Calendar;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Factura {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Calendar fechaIngreso;
 	private Calendar fechaSalida;
-	private String placaVehiculo;
+	@ManyToOne
+	private Vehiculo vehiculo;
 	private int horas;
 	private double valor;
 	
@@ -43,12 +48,12 @@ public class Factura {
 		this.fechaSalida = fechaSalida;
 	}
 
-	public String getPlacaVehiculo() {
-		return placaVehiculo;
+	public Vehiculo getVehiculo() {
+		return vehiculo;
 	}
 
-	public void setPlacaVehiculo(String placaVehiculo) {
-		this.placaVehiculo = placaVehiculo;
+	public void setVehiculo(Vehiculo vehiculo) {
+		this.vehiculo = vehiculo;
 	}
 
 	public int getHoras() {

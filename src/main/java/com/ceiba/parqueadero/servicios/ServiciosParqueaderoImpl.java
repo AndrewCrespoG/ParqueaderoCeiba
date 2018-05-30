@@ -1,8 +1,10 @@
 package com.ceiba.parqueadero.servicios;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,50 +12,54 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ceiba.parqueadero.logica.ControladorParquedero;
 import com.ceiba.parqueadero.modelo.Factura;
-import com.ceiba.parqueadero.modelo.TipoVehiculo;
+import com.ceiba.parqueadero.modelo.Parqueadero;
 import com.ceiba.parqueadero.modelo.Vehiculo;
+import com.ceiba.parqueadero.repositorio.RepositorioFacturas;
+import com.ceiba.parqueadero.repositorio.RepositorioParqueadero;
 import com.ceiba.parqueadero.repositorio.RepositorioVehiculos;
 
-@RequestMapping(value="/parqueadero")
+@RequestMapping(value="/parqueadero/vehiculo")
 @RestController
 public class ServiciosParqueaderoImpl implements ServiciosParquedero{
-
-	//@Autowired
-	ControladorParquedero controladorParquedero;
 	
 	@Autowired
 	RepositorioVehiculos repositorioVehiculos;
 	
-	@Override
-    @RequestMapping(value="/vehiculos", method = RequestMethod.POST)
-	public Factura ingresarVehiculo(@RequestBody Vehiculo vehiculo) throws Exception {
-		Vehiculo v = new Vehiculo();
-		try {
-			v.setPlaca(vehiculo.getPlaca());
-			//v.setTipoVehiculo(vehiculo.getTipoVehiculo());
-			v.setPropietario(vehiculo.getPropietario());
-			v.setCilindraje(vehiculo.getCilindraje());
-			repositorioVehiculos.save(v);
-		}catch(Exception e) {
-			e.getMessage();
-		}
-		
-		Factura factura = new Factura();
-		return factura;
-	}
-
-	@Override
+	@Autowired
+	RepositorioFacturas repositorioFacturas;
 	
-	public Factura calcularValorFactura(String placa) {
-		
-		return null;
+	@Autowired
+	RepositorioParqueadero repositorioParqueadero;
+	
+	@Autowired
+	ControladorParquedero controladorParqueadero;
+	
+	@Override
+    @RequestMapping(value="/ingresar-vehiculo", method = RequestMethod.POST)
+	public Factura ingresarVehiculo(@RequestBody Vehiculo vehiculo) throws Exception {
+		return controladorParqueadero.ingresarVehiculo(vehiculo);
 	}
 
 	@Override
-	@RequestMapping(value="/todos-los-vehiculos", method = RequestMethod.GET)
-	public List<Vehiculo> consultarVehiculosEnParqueadero(String parqueadero) {
-		//Vehiculo v = new Vehiculo();
-		return null;
+	@RequestMapping(value = "/calcular-factura", method = RequestMethod.POST)
+	public Factura calcularValorFactura(@RequestBody String placa) throws Exception{	
+		
+		return controladorParqueadero.calcularValorFactura(placa);
+	}
+	
+	public int calcularHorasEntreDosFechas(Calendar fechaAntigua, Calendar fechaFuturo) {
+		int horasCalc = (int) ((fechaFuturo.getTimeInMillis() - fechaAntigua.getTimeInMillis())/1000/60/60);
+		System.out.println("Siempre se le va a calcular una hora por lo menos");
+		return (horasCalc <= 0) ? (1) : (horasCalc);
+	}
+
+	@Override
+	@RequestMapping(value="/listar-vehiculos", method = RequestMethod.GET)
+	public List<Vehiculo> consultarVehiculosEnParqueadero (String parqueadero){
+		List<Vehiculo> vehiculos = new ArrayList<>();
+		repositorioVehiculos.findAll()
+		.forEach(vehiculos::add);
+		return vehiculos;
 	}
 
 }
