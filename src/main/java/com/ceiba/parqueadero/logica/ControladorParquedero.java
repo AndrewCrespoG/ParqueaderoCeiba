@@ -12,4 +12,6 @@ public interface ControladorParquedero {
 	Factura calcularValorFactura(String placa) throws Exception;
 	
 	List<Vehiculo> consultarVehiculosEnParqueadero (String parqueadero);
+	
+	void retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception;
 }

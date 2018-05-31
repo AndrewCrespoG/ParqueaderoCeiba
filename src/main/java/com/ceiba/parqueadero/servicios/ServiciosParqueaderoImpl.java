@@ -39,6 +39,12 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	public Factura ingresarVehiculo(@RequestBody Vehiculo vehiculo) throws Exception {
 		return controladorParqueadero.ingresarVehiculo(vehiculo);
 	}
+	
+	@Override
+	@RequestMapping(value="/retirar-vehiculo", method = RequestMethod.POST)
+	public void retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception {
+		controladorParqueadero.retirarVehiculoDelParqueadero(vehiculo);
+	}
 
 	@Override
 	@RequestMapping(value = "/calcular-factura", method = RequestMethod.POST)

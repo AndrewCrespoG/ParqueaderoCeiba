@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.ceiba.parqueadero.comun.ManejoDeFechas;
 import com.ceiba.parqueadero.modelo.Factura;
+import com.ceiba.parqueadero.modelo.Parqueadero;
 import com.ceiba.parqueadero.modelo.Tarifa;
 import com.ceiba.parqueadero.modelo.TipoVehiculo;
 import com.ceiba.parqueadero.modelo.Vehiculo;
 import com.ceiba.parqueadero.repositorio.RepositorioFacturas;
+import com.ceiba.parqueadero.repositorio.RepositorioParqueadero;
 import com.ceiba.parqueadero.repositorio.RepositorioTarifas;
 import com.ceiba.parqueadero.repositorio.RepositorioVehiculos;
 
@@ -29,11 +31,18 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	@Autowired
 	RepositorioTarifas repositorioTarifas;
 	
+	@Autowired
+	RepositorioParqueadero repositorioParqueaderos;
+	
 	@Override
 	public Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception {
+		
 		Factura factura = new Factura();
-		vehiculo.setPlaca(vehiculo.getPlaca().toUpperCase());//Placa en mayusculas
+		vehiculo.setPlaca(vehiculo.getPlaca().toUpperCase());//Placa en mayusculas, por si acaso
 		validarPlacaVehiculo(vehiculo);
+		
+		//Mirar el tipo de vehiculo para calcular si hay espacio donde se pueda entrar
+		verificarEspaciosDisponibles(vehiculo);//Que matanza de excepciones xd
 		
 		if(repositorioVehiculos.existsById(vehiculo.getPlaca())) {
 			throw new Exception ("El vehiculo ya esta registrado en el parqueadero");
@@ -41,6 +50,9 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 			
 			repositorioVehiculos.save(vehiculo);
 			System.out.println("Vehiculo guardado");
+			
+			recalcularEspaciosParqueadero(vehiculo);
+			
 			factura.setVehiculo(vehiculo);
 			factura.setFechaIngreso(Calendar.getInstance());
 			factura.setValor(0);
@@ -54,8 +66,49 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		return factura;
 	}
 	
-	public void validarPlacaVehiculo(Vehiculo vehiculo) throws Exception{
+	public void verificarEspaciosDisponibles(Vehiculo vehiculo) throws Exception {
+		//Mira pra ver si hay espacios en el parqueadero donde este vehiculo se pueda guardar
+		Optional <Parqueadero> parqueadero = repositorioParqueaderos.findById("1");
+		if (!parqueadero.isPresent()) {
+			throw new Exception ("Parqueadero no encontrado");
+		}
+		if(vehiculo.getTipoVehiculo().getNombre().equals("Automovil")) {
+			//Preguntar si hay espacios para autos
+			if(parqueadero.get().getNumLugaresAutomovilesDisponibles() < 1) {
+				throw new Exception("No quedan espacios disponibles para guardar automoviles");
+			}
+		}else if(vehiculo.getTipoVehiculo().getNombre().equals("Motocicleta")) {
+			if(parqueadero.get().getNumLugaresMotocicletasDisponibles() < 1) {
+				throw new Exception("No quedan espacios disponibles para guardar motocicletas");
+			}
+		}
+	}
+	
+	public Parqueadero recalcularEspaciosParqueadero(Vehiculo vehiculo) throws Exception {
+		Optional <Parqueadero> parqueadero = repositorioParqueaderos.findById("1");
+		if(!parqueadero.isPresent()) {
+			throw new Exception("Parqueadero no encontrado, debe crearse");
+		}
 		
+		repositorioParqueaderos.delete(parqueadero.get());
+		
+		if(vehiculo.getTipoVehiculo().getNombre().equals("Automovil")) {//Reduce automovil
+			parqueadero.get().setNumLugaresAutomovilesDisponibles(
+					parqueadero.get().getNumLugaresAutomovilesDisponibles() - 1);
+		}else if(vehiculo.getTipoVehiculo().getNombre().equals("Motocicleta")) {//Reduce motocicleta
+			parqueadero.get().setNumLugaresMotocicletasDisponibles(
+					parqueadero.get().getNumLugaresMotocicletasDisponibles() - 1);
+		}
+		
+		repositorioParqueaderos.save(parqueadero.get());
+		
+		System.out.println("Espacios disponibles recalculados");
+		
+		return parqueadero.get();
+	}
+	
+	public void validarPlacaVehiculo(Vehiculo vehiculo) throws Exception{
+		//Consulta si se puede ingresar el vehiculo de acuerdo a la restriccion de placa
 		if(vehiculo.getPlaca().startsWith("A") && (!(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || 
 				Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY))) {
 			//No entra
@@ -70,19 +123,15 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		Optional <Factura> factura = repositorioFacturas.findByVehiculoPlaca(placa);
 		Optional <Vehiculo> vehiculo = repositorioVehiculos.findById(placa);
 		Optional <Tarifa> tarifa = repositorioTarifas.findByTipoVehiculo(vehiculo.get().getTipoVehiculo());
-		
 		if(!factura.isPresent()) {
 			throw new Exception("Esta placa no coincide con ninguna factura");
 		}
-		
 		if (!vehiculo.isPresent()) {
 			throw new Exception("Vehiculo no encontrado");
 		}
-		
 		if(!tarifa.isPresent()) {
 			throw new Exception("Hubo un problema consultando las tarifas, verificar los tipos de tarifa");
 		}
-		
 		factura = obtenerTotalPorPagar(factura, tarifa, vehiculo);
 		return factura.get();
 	}
@@ -103,7 +152,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	
 	public double calcularAdicionales(Optional<Vehiculo> vehiculo) {
 		if(vehiculo.get().getTipoVehiculo().getNombre().equals("Motocicleta") && vehiculo.get().getCilindraje() > 500) {
-			return 2000D;
+			return 2000;
 		}
 		return 0;
 	}
@@ -152,8 +201,30 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	
 	@Override
 	public List<Vehiculo> consultarVehiculosEnParqueadero(String parqueadero) {
-		
 		return null;
+	}
+	
+	@Override
+	public void retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception {
+		Optional <Parqueadero> parqueadero = repositorioParqueaderos.findById("1");
+		if(!parqueadero.isPresent()) {
+			throw new Exception("Parqueadero no encontrado, debe crearse");
+		}
+		
+		repositorioParqueaderos.delete(parqueadero.get());
+		
+		if(vehiculo.getTipoVehiculo().getNombre().equals("Automovil")) {//Aumenta los espacios para Autos
+			parqueadero.get().setNumLugaresAutomovilesDisponibles(
+					parqueadero.get().getNumLugaresAutomovilesDisponibles() + 1);
+		}else if(vehiculo.getTipoVehiculo().getNombre().equals("Motocicleta")) {//Aumenta los espacios para motos
+			parqueadero.get().setNumLugaresMotocicletasDisponibles(
+					parqueadero.get().getNumLugaresMotocicletasDisponibles() + 1);
+		}
+		
+		repositorioParqueaderos.save(parqueadero.get());
+		
+		System.out.println("Espacios disponibles recalculados");
+		
 	}
 
 }

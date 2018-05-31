@@ -5,4 +5,5 @@ import com.ceiba.parqueadero.modelo.Parqueadero;
 
 public interface RepositorioParqueadero extends CrudRepository <Parqueadero, String> {
 
+
 }
