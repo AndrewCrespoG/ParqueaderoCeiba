@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ceiba.parqueadero.logica.ControladorParquedero;
 import com.ceiba.parqueadero.modelo.Factura;
-import com.ceiba.parqueadero.modelo.Parqueadero;
+
 import com.ceiba.parqueadero.modelo.Vehiculo;
 import com.ceiba.parqueadero.repositorio.RepositorioFacturas;
 import com.ceiba.parqueadero.repositorio.RepositorioParqueadero;
@@ -43,7 +43,6 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	@Override
 	@RequestMapping(value = "/calcular-factura", method = RequestMethod.POST)
 	public Factura calcularValorFactura(@RequestBody String placa) throws Exception{	
-		
 		return controladorParqueadero.calcularValorFactura(placa);
 	}
 	

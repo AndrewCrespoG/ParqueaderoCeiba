@@ -30,30 +30,35 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	
 	@Override
 	public Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception {
-Factura factura = new Factura();
+		Factura factura = new Factura();
 		
-		try {
-
-			if(repositorioVehiculos.existsById(vehiculo.getPlaca())) {
-				System.out.println("El vehiculo ya esta registrado en el parqueadero");
-			}else{
-				System.out.println("Ingresando vehiculo");
-				repositorioVehiculos.save(vehiculo);
-				
-				
-				factura.setVehiculo(vehiculo);
-				factura.setFechaIngreso(Calendar.getInstance());
-				factura.setValor(0);
-				factura.setFechaSalida(null);
-				factura.setHoras(0);
-
-				repositorioFacturas.save(factura);
-			}
+		validarPlacaVehiculo(vehiculo);
+		
+		if(repositorioVehiculos.existsById(vehiculo.getPlaca())) {
+			System.out.println("El vehiculo ya esta registrado en el parqueadero");
+		}else{
+			System.out.println("Ingresando vehiculo");
+			repositorioVehiculos.save(vehiculo);
 			
-		}catch(Exception e) {
-			e.getMessage();
+			factura.setVehiculo(vehiculo);
+			factura.setFechaIngreso(Calendar.getInstance());
+			factura.setValor(0);
+			factura.setFechaSalida(null);
+			factura.setHoras(0);
+
+			repositorioFacturas.save(factura);
 		}
+		
 		return factura;
+	}
+	
+	public void validarPlacaVehiculo(Vehiculo vehiculo) throws Exception{
+		if(vehiculo.getPlaca().startsWith("A") && (!(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || 
+				Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY))) {
+			//No entra
+			throw new Exception("El vehiculo no esta autorizado para ingresar");
+		}
+		
 	}
 
 	@Override
@@ -63,10 +68,9 @@ Factura factura = new Factura();
 		if (!factura.isPresent()) {
 			throw new Exception("No se ha encotnrado el vehiculo en la bd factura");
 		}
-		int pilaDeHoras = ManejoDeFechas.calcularHorasEntreDosFechas(factura.get().get(0).getFechaIngreso(), Calendar.getInstance());
-		int diasPorFacturar = calcularDiasPorFacturar(pilaDeHoras);
-		int horasPorFacturar = calcularHorasPorFacturar(pilaDeHoras);
-		//Obtener valores de tarifa, y multiplicar por las horas a facturar
+		
+		//Obtener valor total de la factura y adicionales
+		
 		Optional<Vehiculo> vehiculo = repositorioVehiculos.findById(placa);
 		if (!vehiculo.isPresent()) {
 			throw new Exception("No se ha encontrado vehiculo");
@@ -77,7 +81,7 @@ Factura factura = new Factura();
 		return null;
 	}
 	
-	public Factura calcularValorFactura2(Factura factura, Tarifa tarifa, Vehiculo vehiculo) {
+	public Factura obtenerTotalPorPagar(Factura factura, Tarifa tarifa, Vehiculo vehiculo) {
 		int numeroDeHoras = ManejoDeFechas.calcularHorasEntreDosFechas(factura.getFechaIngreso(), Calendar.getInstance());
 		int diasPorFacturar = calcularDiasPorFacturar(numeroDeHoras);
 		int horasPorFacturar = calcularHorasPorFacturar(numeroDeHoras);
@@ -86,11 +90,15 @@ Factura factura = new Factura();
 		valorFactura += calcularAdicionales(vehiculo); 
 		
 		factura.setValor(valorFactura);
+		factura.setHoras(numeroDeHoras);
+		factura.setFechaSalida(Calendar.getInstance());
 		return factura;
 	}
 	
 	public Double calcularAdicionales(Vehiculo vehiculo) {
-		//
+		if(vehiculo.getTipoVehiculo().getNombre().equals("Motocicleta") && vehiculo.getCilindraje() > 500) {
+			return 2000D;
+		}
 		return 0D;
 	}
 	
