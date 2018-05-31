@@ -74,13 +74,12 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		}
 		if(vehiculo.getTipoVehiculo().getNombre().equals("Automovil")) {
 			//Preguntar si hay espacios para autos
-			if(parqueadero.get().getNumLugaresAutomovilesDisponibles() < 1) {
+			if(parqueadero.get().getNumLugaresAutomovilesDisponibles() <= 0) {
 				throw new Exception("No quedan espacios disponibles para guardar automoviles");
 			}
-		}else if(vehiculo.getTipoVehiculo().getNombre().equals("Motocicleta")) {
-			if(parqueadero.get().getNumLugaresMotocicletasDisponibles() < 1) {
-				throw new Exception("No quedan espacios disponibles para guardar motocicletas");
-			}
+		}else if(vehiculo.getTipoVehiculo().getNombre().equals("Motocicleta") &&
+				parqueadero.get().getNumLugaresMotocicletasDisponibles() <= 0) {
+				throw new Exception ("No quedan espacios disponibles para guardar motocicletas");
 		}
 	}
 	
@@ -133,6 +132,10 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 			throw new Exception("Hubo un problema consultando las tarifas, verificar los tipos de tarifa");
 		}
 		factura = obtenerTotalPorPagar(factura, tarifa, vehiculo);
+		
+		//asdasdasdasdasdasdasdasdasdasdasdasda
+		retirarFacturaDelVehiculo(vehiculo.get());
+		eliminarVehiculoDelParqueadero(vehiculo.get());
 		return factura.get();
 	}
 	
@@ -211,8 +214,6 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 			throw new Exception("Parqueadero no encontrado, debe crearse");
 		}
 		
-		repositorioParqueaderos.delete(parqueadero.get());
-		
 		if(vehiculo.getTipoVehiculo().getNombre().equals("Automovil")) {//Aumenta los espacios para Autos
 			parqueadero.get().setNumLugaresAutomovilesDisponibles(
 					parqueadero.get().getNumLugaresAutomovilesDisponibles() + 1);
@@ -222,9 +223,25 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		}
 		
 		repositorioParqueaderos.save(parqueadero.get());
-		
 		System.out.println("Espacios disponibles recalculados");
+		retirarFacturaDelVehiculo(vehiculo);
+		
+		eliminarVehiculoDelParqueadero(vehiculo);
 		
 	}
+	
+	public void retirarFacturaDelVehiculo(Vehiculo vehiculo) throws Exception {
+		Optional <Factura> factura = repositorioFacturas.findByVehiculoPlaca(vehiculo.getPlaca());
+		if (! factura.isPresent()) {
+			throw new Exception("Factura no encontrada");
+		}
+		repositorioFacturas.delete(factura.get());
+	}
+	
+	
+	public void eliminarVehiculoDelParqueadero(Vehiculo vehiculo) {
+		repositorioVehiculos.deleteById(vehiculo.getPlaca());
+	}
+	
 
 }

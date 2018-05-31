@@ -7,7 +7,7 @@ import javax.persistence.Id;
 public class Parqueadero {
 
 	@Id
-	private int id;
+	private String id;
 	private String nombreParqueadero;
 	private int numLugaresMotocicletasDisponibles;
 	private int numLugaresAutomovilesDisponibles;
@@ -23,11 +23,11 @@ public class Parqueadero {
 		this.nombreParqueadero = nombreParqueadero;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -42,7 +42,7 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	
 	@Override
 	@RequestMapping(value="/retirar-vehiculo", method = RequestMethod.POST)
-	public void retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception {
+	public void retirarVehiculoDelParqueadero(@RequestBody Vehiculo vehiculo) throws Exception {
 		controladorParqueadero.retirarVehiculoDelParqueadero(vehiculo);
 	}
 

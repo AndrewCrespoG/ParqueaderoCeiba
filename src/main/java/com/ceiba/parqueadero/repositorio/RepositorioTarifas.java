@@ -8,6 +8,4 @@ import com.ceiba.parqueadero.modelo.TipoVehiculo;
 public interface RepositorioTarifas extends CrudRepository<Tarifa, String> {
 	
 	Optional<Tarifa> findByTipoVehiculo(TipoVehiculo tipoVehiculo);
-
-	//@Query(value = "select * from ", nativeQuery = true)
 }
