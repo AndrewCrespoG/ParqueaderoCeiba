@@ -3,6 +3,7 @@ package com.ceiba.parqueadero.logica;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,15 +32,15 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	@Override
 	public Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception {
 		Factura factura = new Factura();
-		
+		vehiculo.setPlaca(vehiculo.getPlaca().toUpperCase());//Placa en mayusculas
 		validarPlacaVehiculo(vehiculo);
 		
 		if(repositorioVehiculos.existsById(vehiculo.getPlaca())) {
-			System.out.println("El vehiculo ya esta registrado en el parqueadero");
+			throw new Exception ("El vehiculo ya esta registrado en el parqueadero");
 		}else{
-			System.out.println("Ingresando vehiculo");
-			repositorioVehiculos.save(vehiculo);
 			
+			repositorioVehiculos.save(vehiculo);
+			System.out.println("Vehiculo guardado");
 			factura.setVehiculo(vehiculo);
 			factura.setFechaIngreso(Calendar.getInstance());
 			factura.setValor(0);
@@ -47,16 +48,18 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 			factura.setHoras(0);
 
 			repositorioFacturas.save(factura);
+			System.out.println("Factura guardada");
 		}
 		
 		return factura;
 	}
 	
 	public void validarPlacaVehiculo(Vehiculo vehiculo) throws Exception{
+		
 		if(vehiculo.getPlaca().startsWith("A") && (!(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || 
 				Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY))) {
 			//No entra
-			throw new Exception("El vehiculo no esta autorizado para ingresar");
+			throw new Exception("El vehiculo no esta autorizado para ingresar (hoy)");
 		}
 		
 	}
@@ -64,50 +67,53 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	@Override
 	public Factura calcularValorFactura(String placa) throws Exception {
 		
-		Optional <List<Factura>> factura = repositorioFacturas.findByVehiculoPlaca(placa);
-		if (!factura.isPresent()) {
-			throw new Exception("No se ha encotnrado el vehiculo en la bd factura");
+		Optional <Factura> factura = repositorioFacturas.findByVehiculoPlaca(placa);
+		Optional <Vehiculo> vehiculo = repositorioVehiculos.findById(placa);
+		Optional <Tarifa> tarifa = repositorioTarifas.findByTipoVehiculo(vehiculo.get().getTipoVehiculo());
+		
+		if(!factura.isPresent()) {
+			throw new Exception("Esta placa no coincide con ninguna factura");
 		}
 		
-		//Obtener valor total de la factura y adicionales
-		
-		Optional<Vehiculo> vehiculo = repositorioVehiculos.findById(placa);
 		if (!vehiculo.isPresent()) {
-			throw new Exception("No se ha encontrado vehiculo");
+			throw new Exception("Vehiculo no encontrado");
 		}
-		Tarifa tarifa = consultarTarifaPorTipoVehiculo(vehiculo.get().getTipoVehiculo());
 		
+		if(!tarifa.isPresent()) {
+			throw new Exception("Hubo un problema consultando las tarifas, verificar los tipos de tarifa");
+		}
 		
-		return null;
+		factura = obtenerTotalPorPagar(factura, tarifa, vehiculo);
+		return factura.get();
 	}
 	
-	public Factura obtenerTotalPorPagar(Factura factura, Tarifa tarifa, Vehiculo vehiculo) {
-		int numeroDeHoras = ManejoDeFechas.calcularHorasEntreDosFechas(factura.getFechaIngreso(), Calendar.getInstance());
+	public Optional<Factura> obtenerTotalPorPagar(Optional<Factura> factura, Optional<Tarifa> tarifa, Optional<Vehiculo> vehiculo) {
+		int numeroDeHoras = ManejoDeFechas.calcularHorasEntreDosFechas(factura.get().getFechaIngreso(), Calendar.getInstance());
 		int diasPorFacturar = calcularDiasPorFacturar(numeroDeHoras);
 		int horasPorFacturar = calcularHorasPorFacturar(numeroDeHoras);
 		
-		Double valorFactura = (tarifa.getValorPorHora() * horasPorFacturar ) + (tarifa.getValorPorDia() * diasPorFacturar);
+		Double valorFactura = (tarifa.get().getValorPorHora() * horasPorFacturar) + (tarifa.get().getValorPorDia() * diasPorFacturar);
 		valorFactura += calcularAdicionales(vehiculo); 
 		
-		factura.setValor(valorFactura);
-		factura.setHoras(numeroDeHoras);
-		factura.setFechaSalida(Calendar.getInstance());
+		factura.get().setValor(valorFactura);
+		factura.get().setHoras(numeroDeHoras);
+		factura.get().setFechaSalida(Calendar.getInstance());
 		return factura;
 	}
 	
-	public Double calcularAdicionales(Vehiculo vehiculo) {
-		if(vehiculo.getTipoVehiculo().getNombre().equals("Motocicleta") && vehiculo.getCilindraje() > 500) {
+	public double calcularAdicionales(Optional<Vehiculo> vehiculo) {
+		if(vehiculo.get().getTipoVehiculo().getNombre().equals("Motocicleta") && vehiculo.get().getCilindraje() > 500) {
 			return 2000D;
 		}
-		return 0D;
+		return 0;
 	}
 	
 	public Tarifa consultarTarifaPorTipoVehiculo(TipoVehiculo tipoVehiculo) throws Exception {
-		Optional<List<Tarifa>> tarifa = repositorioTarifas.findByTipoVehiculo(tipoVehiculo.getId());
-		if (! tarifa.isPresent() && tarifa.get().isEmpty()) {
+		Optional<Tarifa> tarifa = repositorioTarifas.findByTipoVehiculo(tipoVehiculo);
+		if (! tarifa.isPresent() && tarifa.get() == null) {
 			throw new Exception("No se pudo recuperar la tarifa");
 		}
-		return tarifa.get().get(0);
+		return tarifa.get();
 	}
 	
 	public int calcularDiasPorFacturar(int pilaDeHoras) {
@@ -121,6 +127,8 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 				//Hace que la pila de horas sea cero y agrega un dia
 				pilaDeHoras = 0;
 				diasPorFacturar = diasPorFacturar + 1;
+			} else if(pilaDeHoras < 9) {
+				pilaDeHoras= 0;
 			}
 		}
 		return  diasPorFacturar;

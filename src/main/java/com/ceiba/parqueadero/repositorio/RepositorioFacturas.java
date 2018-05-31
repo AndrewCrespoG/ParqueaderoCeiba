@@ -9,6 +9,6 @@ import com.ceiba.parqueadero.modelo.Tarifa;
 
 public interface RepositorioFacturas extends CrudRepository <Factura, String>{
 	
-	Optional<List<Factura>> findByVehiculoPlaca(String placa);
+	Optional<Factura> findByVehiculoPlaca(String placa);
 
 }

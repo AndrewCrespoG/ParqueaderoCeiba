@@ -20,7 +20,6 @@ public class Factura {
 	private Vehiculo vehiculo;
 	private int horas;
 	private double valor;
-	private String estado;
 	
 	public Factura() {
 	}
@@ -73,12 +72,4 @@ public class Factura {
 		this.valor = valor;
 	}
 
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	
 }

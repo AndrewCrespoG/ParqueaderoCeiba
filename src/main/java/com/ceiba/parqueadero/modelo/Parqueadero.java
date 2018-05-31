@@ -5,19 +5,12 @@ import javax.persistence.Id;
 
 @Entity
 public class Parqueadero {
-	/*+ nombreParqueadero: string
-	+ numLugaresMotocicletas: int
-	+ numLugaresAutomoviles: int
-	+ numLugaresAutomovilesOcu: int
-	+ numLugaresMotocicletas: int*/
-	
+
 	@Id
 	private int id;
 	private String nombreParqueadero;
-	private int numLugaresMotocicletas;
-	private int numLugaresAutomoviles;
-	private int numLugaresAutomovilesOcupados;
-	private int numLugaresMotocicletasOcupados;
+	private int numLugaresMotocicletasDisponibles;
+	private int numLugaresAutomovilesDisponibles;
 	
 	public Parqueadero() {
 	}
@@ -30,37 +23,27 @@ public class Parqueadero {
 		this.nombreParqueadero = nombreParqueadero;
 	}
 
-	public int getNumLugaresMotocicletas() {
-		return numLugaresMotocicletas;
+	public int getId() {
+		return id;
 	}
 
-	public void setNumLugaresMotocicletas(int numLugaresMotocicletas) {
-		this.numLugaresMotocicletas = numLugaresMotocicletas;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public int getNumLugaresAutomoviles() {
-		return numLugaresAutomoviles;
+	public int getNumLugaresMotocicletasDisponibles() {
+		return numLugaresMotocicletasDisponibles;
 	}
 
-	public void setNumLugaresAutomoviles(int numLugaresAutomoviles) {
-		this.numLugaresAutomoviles = numLugaresAutomoviles;
+	public void setNumLugaresMotocicletasDisponibles(int numLugaresMotocicletasDisponibles) {
+		this.numLugaresMotocicletasDisponibles = numLugaresMotocicletasDisponibles;
 	}
 
-	public int getNumLugaresAutomovilesOcupados() {
-		return numLugaresAutomovilesOcupados;
+	public int getNumLugaresAutomovilesDisponibles() {
+		return numLugaresAutomovilesDisponibles;
 	}
 
-	public void setNumLugaresAutomovilesOcupados(int numLugaresAutomovilesOcupados) {
-		this.numLugaresAutomovilesOcupados = numLugaresAutomovilesOcupados;
+	public void setNumLugaresAutomovilesDisponibles(int numLugaresAutomovilesDisponibles) {
+		this.numLugaresAutomovilesDisponibles = numLugaresAutomovilesDisponibles;
 	}
-
-	public int getNumLugaresMotocicletasOcupados() {
-		return numLugaresMotocicletasOcupados;
-	}
-
-	public void setNumLugaresMotocicletasOcupados(int numLugaresMotocicletasOcupados) {
-		this.numLugaresMotocicletasOcupados = numLugaresMotocicletasOcupados;
-	}
-	
-	
 }
