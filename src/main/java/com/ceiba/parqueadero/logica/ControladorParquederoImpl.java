@@ -3,7 +3,6 @@ package com.ceiba.parqueadero.logica;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +66,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	}
 	
 	public void verificarEspaciosDisponibles(Vehiculo vehiculo) throws Exception {
-		//Mira pra ver si hay espacios en el parqueadero donde este vehiculo se pueda guardar
+		//Mira para ver si hay espacios en el parqueadero donde este vehiculo se pueda guardar
 		Optional <Parqueadero> parqueadero = repositorioParqueaderos.findById("1");
 		if (!parqueadero.isPresent()) {
 			throw new Exception ("Parqueadero no encontrado");

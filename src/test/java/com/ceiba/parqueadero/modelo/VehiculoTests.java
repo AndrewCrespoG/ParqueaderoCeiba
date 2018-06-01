@@ -3,16 +3,16 @@ package com.ceiba.parqueadero.modelo;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TarifaTests {
+public class VehiculoTests {
 
 	@Test
-	public void crearTarifaTest() {
+	public void crearVehiculoTest() {
 		//Arrange
 		
 		//Act
-		Tarifa tarifa = new Tarifa();
+		Vehiculo vehiculo = new Vehiculo();
 		
 		//Assert
-		Assert.assertNotNull(tarifa);
+		Assert.assertNotNull(vehiculo);
 	}
 }
