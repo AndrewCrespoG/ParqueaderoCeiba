@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ceiba.parqueadero.comun.ManejoDeFechasTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-06-01T19:51:28" hostname="ANDRES-CRESPO" time="0.018">
+  <properties/>
+  <testcase name="calcularHorasEntreDosFechasUnDiaTest" classname="com.ceiba.parqueadero.comun.ManejoDeFechasTests" time="0.017"/>
+  <testcase name="calcularHorasEntreDosFechasUnaHoraTest" classname="com.ceiba.parqueadero.comun.ManejoDeFechasTests" time="0.001"/>
+  <system-out><![CDATA[Siempre se le va a calcular una hora por lo menos
+Siempre se le va a calcular una hora por lo menos
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

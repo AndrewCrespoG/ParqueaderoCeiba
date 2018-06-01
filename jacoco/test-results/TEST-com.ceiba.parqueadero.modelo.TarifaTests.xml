@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ceiba.parqueadero.modelo.TarifaTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-06-01T19:51:28" hostname="ANDRES-CRESPO" time="0.001">
+  <properties/>
+  <testcase name="crearTarifaTest" classname="com.ceiba.parqueadero.modelo.TarifaTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

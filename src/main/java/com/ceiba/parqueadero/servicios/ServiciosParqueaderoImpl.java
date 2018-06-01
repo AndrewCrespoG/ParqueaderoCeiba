@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,30 +35,34 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	ControladorParquedero controladorParqueadero;
 	
 	@Override
+	@CrossOrigin(origins="*")
     @RequestMapping(value="/ingresar-vehiculo", method = RequestMethod.POST)
 	public Factura ingresarVehiculo(@RequestBody Vehiculo vehiculo) throws Exception {
 		return controladorParqueadero.ingresarVehiculo(vehiculo);
 	}
 	
 	@Override
+	@CrossOrigin(origins="*")
 	@RequestMapping(value="/retirar-vehiculo", method = RequestMethod.POST)
 	public void retirarVehiculoDelParqueadero(@RequestBody Vehiculo vehiculo) throws Exception {
 		controladorParqueadero.retirarVehiculoDelParqueadero(vehiculo);
 	}
 
 	@Override
+	@CrossOrigin(origins="*")
 	@RequestMapping(value = "/calcular-factura", method = RequestMethod.POST)
 	public Factura calcularValorFactura(@RequestBody String placa) throws Exception{	
 		return controladorParqueadero.calcularValorFactura(placa);
 	}
 	
-	public int calcularHorasEntreDosFechas(Calendar fechaAntigua, Calendar fechaFuturo) {
+	/*public int calcularHorasEntreDosFechas(Calendar fechaAntigua, Calendar fechaFuturo) {
 		int horasCalc = (int) ((fechaFuturo.getTimeInMillis() - fechaAntigua.getTimeInMillis())/1000/60/60);
 		System.out.println("Siempre se le va a calcular una hora por lo menos");
 		return (horasCalc <= 0) ? (1) : (horasCalc);
-	}
+	}*/
 
 	@Override
+    @CrossOrigin(origins="*")
 	@RequestMapping(value="/listar-vehiculos", method = RequestMethod.GET)
 	public List<Vehiculo> consultarVehiculosEnParqueadero (String parqueadero){
 		List<Vehiculo> vehiculos = new ArrayList<>();
