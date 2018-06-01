@@ -225,7 +225,6 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		repositorioParqueaderos.save(parqueadero.get());
 		System.out.println("Espacios disponibles recalculados");
 		retirarFacturaDelVehiculo(vehiculo);
-		
 		eliminarVehiculoDelParqueadero(vehiculo);
 		
 	}
