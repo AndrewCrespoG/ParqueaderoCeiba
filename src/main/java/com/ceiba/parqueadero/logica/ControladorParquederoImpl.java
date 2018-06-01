@@ -120,14 +120,14 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	public Factura calcularValorFactura(String placa) throws Exception {
 		
 		Optional <Factura> factura = repositorioFacturas.findByVehiculoPlaca(placa);
-		Optional <Vehiculo> vehiculo = repositorioVehiculos.findById(placa);
-		Optional <Tarifa> tarifa = repositorioTarifas.findByTipoVehiculo(vehiculo.get().getTipoVehiculo());
 		if(!factura.isPresent()) {
 			throw new Exception("Esta placa no coincide con ninguna factura");
 		}
+		Optional <Vehiculo> vehiculo = repositorioVehiculos.findById(placa);
 		if (!vehiculo.isPresent()) {
 			throw new Exception("Vehiculo no encontrado");
 		}
+		Optional <Tarifa> tarifa = repositorioTarifas.findByTipoVehiculo(vehiculo.get().getTipoVehiculo());
 		if(!tarifa.isPresent()) {
 			throw new Exception("Hubo un problema consultando las tarifas, verificar los tipos de tarifa");
 		}
