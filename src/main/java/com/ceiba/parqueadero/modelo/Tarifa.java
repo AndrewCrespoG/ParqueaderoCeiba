@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 public class Tarifa {
 
 	@Id
-	private Long id;
+	private int id;
 	private double valorPorHora;
 	private double valorPorDia;
 	@ManyToOne
@@ -33,11 +33,11 @@ public class Tarifa {
 		this.tipoVehiculo = tipoVehiculo;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.ceiba.parqueadero.modelo.Tarifa;
 import com.ceiba.parqueadero.modelo.TipoVehiculo;
 
-public interface RepositorioTarifas extends CrudRepository<Tarifa, String> {
+public interface RepositorioTarifas extends CrudRepository<Tarifa, Integer> {
 	
 	Optional<Tarifa> findByTipoVehiculo(TipoVehiculo tipoVehiculo);
 }

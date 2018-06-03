@@ -1,7 +1,6 @@
 package com.ceiba.parqueadero.servicios;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,12 +53,6 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	public Factura calcularValorFactura(@RequestBody String placa) throws Exception{	
 		return controladorParqueadero.calcularValorFactura(placa);
 	}
-	
-	/*public int calcularHorasEntreDosFechas(Calendar fechaAntigua, Calendar fechaFuturo) {
-		int horasCalc = (int) ((fechaFuturo.getTimeInMillis() - fechaAntigua.getTimeInMillis())/1000/60/60);
-		System.out.println("Siempre se le va a calcular una hora por lo menos");
-		return (horasCalc <= 0) ? (1) : (horasCalc);
-	}*/
 
 	@Override
     @CrossOrigin(origins="*")
