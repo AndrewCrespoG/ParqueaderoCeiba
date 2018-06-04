@@ -13,5 +13,5 @@ public interface ControladorParquedero {
 	
 	List<Vehiculo> consultarVehiculosEnParqueadero (String parqueadero);
 	
-	void retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception;
+	Factura retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception;
 }

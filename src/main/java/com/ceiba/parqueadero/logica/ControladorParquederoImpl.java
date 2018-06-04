@@ -199,8 +199,8 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		factura = obtenerTotalPorPagar(factura, tarifa, vehiculo);
 		
 		//Tengo hambre
-		retirarFacturaDelVehiculo(vehiculo.get());
-		eliminarVehiculoDelParqueadero(vehiculo.get());
+		//retirarFacturaDelVehiculo(vehiculo.get());
+		//eliminarVehiculoDelParqueadero(vehiculo.get());
 		return factura.get();
 	}
 	
@@ -273,7 +273,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	}
 	
 	@Override
-	public void retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception {
+	public Factura retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception {
 		Optional <Parqueadero> parqueadero = repositorioParqueaderos.findById("1");
 		if(!parqueadero.isPresent()) {
 			throw new Exception("Parqueadero no encontrado, debe crearse");
@@ -289,16 +289,23 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		
 		repositorioParqueaderos.save(parqueadero.get());
 		System.out.println("Espacios disponibles recalculados");
+		Factura facturaParaMostrar = calcularValorFactura(vehiculo.getPlaca());
+		
+		
 		retirarFacturaDelVehiculo(vehiculo);
 		eliminarVehiculoDelParqueadero(vehiculo);
+		
+		return facturaParaMostrar;
 	}
 	
-	public void retirarFacturaDelVehiculo(Vehiculo vehiculo) throws Exception {
+	public Factura retirarFacturaDelVehiculo(Vehiculo vehiculo) throws Exception {
 		Optional <Factura> factura = repositorioFacturas.findByVehiculoPlaca(vehiculo.getPlaca());
 		if (! factura.isPresent()) {
 			throw new Exception("Factura no encontrada");
 		}
+		factura.get().setFechaSalida(Calendar.getInstance());
 		repositorioFacturas.delete(factura.get());
+		return factura.get();
 	}
 	
 	public void eliminarVehiculoDelParqueadero(Vehiculo vehiculo) {

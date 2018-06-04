@@ -13,6 +13,6 @@ public interface ServiciosParquedero {
 	
 	public List<Vehiculo> consultarVehiculosEnParqueadero (String parqueadero);
 	
-	public void retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception;
+	public Factura retirarVehiculoDelParqueadero(Vehiculo vehiculo) throws Exception;
 	
 }

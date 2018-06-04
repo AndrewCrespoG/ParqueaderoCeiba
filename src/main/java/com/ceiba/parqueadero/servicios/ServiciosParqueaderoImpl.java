@@ -43,8 +43,8 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	@Override
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/retirar-vehiculo", method = RequestMethod.POST)
-	public void retirarVehiculoDelParqueadero(@RequestBody Vehiculo vehiculo) throws Exception {
-		controladorParqueadero.retirarVehiculoDelParqueadero(vehiculo);
+	public Factura retirarVehiculoDelParqueadero(@RequestBody Vehiculo vehiculo) throws Exception {
+		return controladorParqueadero.retirarVehiculoDelParqueadero(vehiculo);
 	}
 
 	@Override
