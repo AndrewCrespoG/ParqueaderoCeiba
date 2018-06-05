@@ -37,6 +37,9 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	@Autowired
 	private RepositorioTipoVehiculos repositorioTipoVehiculos;
 	
+	@Autowired
+	private ManejoDeFechas manejoFechas;
+	
 	public void crearParqueaderoPorDefectoSiNoExiste() {
 		Optional<Parqueadero> parqueadero = repositorioParqueaderos.findById("1");
 		if(!parqueadero.isPresent()) {//Si el parqueadero no existe
@@ -102,9 +105,9 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	public Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception {
 		
 		//Existe el parqueadero y si no, crearlo por defecto
-		crearParqueaderoPorDefectoSiNoExiste();
-		crearTiposDeVehiculosSiNoExisten();
-		crearTarifasDeVehiculoSiNoExisten();
+		//crearParqueaderoPorDefectoSiNoExiste();
+		//crearTiposDeVehiculosSiNoExisten();
+		//crearTarifasDeVehiculoSiNoExisten();
 		
 		Factura factura = new Factura();
 		vehiculo.setPlaca(vehiculo.getPlaca().toUpperCase());//Placa en mayusculas, por si acaso
@@ -119,16 +122,16 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 			
 			repositorioVehiculos.save(vehiculo);
 			System.out.println("Vehiculo guardado");
-			
+			                                                                                                                                                                                                                                                  
 			recalcularEspaciosParqueadero(vehiculo);
 			
 			factura.setVehiculo(vehiculo);
-			factura.setFechaIngreso(Calendar.getInstance());
+			factura.setFechaIngreso(manejoFechas.obtenerFechaActual());
 			factura.setValor(0);
 			factura.setFechaSalida(null);
 			factura.setHoras(0);
 
-			repositorioFacturas.save(factura);
+			repositorioFacturas.save(factura); 	
 			System.out.println("Factura guardada");
 		}
 		
@@ -157,9 +160,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		if(!parqueadero.isPresent()) {
 			throw new Exception("Parqueadero no encontrado, debe crearse");
 		}
-		
-		repositorioParqueaderos.delete(parqueadero.get());
-		
+				
 		if(vehiculo.getTipoVehiculo().getNombre().equals("Automovil")) {//Reduce automovil
 			parqueadero.get().setNumLugaresAutomovilesDisponibles(
 					parqueadero.get().getNumLugaresAutomovilesDisponibles() - 1);
@@ -174,8 +175,8 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	
 	public void validarPlacaVehiculo(Vehiculo vehiculo) throws Exception{
 		//Consulta si se puede ingresar el vehiculo de acuerdo a la restriccion de placa
-		if(vehiculo.getPlaca().startsWith("A") && (!(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || 
-				Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY))) {
+		if(vehiculo.getPlaca().startsWith("A") && (!(manejoFechas.obtenerFechaActual().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || 
+				manejoFechas.obtenerFechaActual().get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY))) {
 			//No entra
 			throw new Exception("El vehiculo no esta autorizado para ingresar (hoy)");
 		}
@@ -205,7 +206,8 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	}
 	
 	public Optional<Factura> obtenerTotalPorPagar(Optional<Factura> factura, Optional<Tarifa> tarifa, Optional<Vehiculo> vehiculo) {
-		int numeroDeHoras = ManejoDeFechas.calcularHorasEntreDosFechas(factura.get().getFechaIngreso(), Calendar.getInstance());
+		int numeroDeHoras = manejoFechas.calcularHorasEntreDosFechas(factura.get().getFechaIngreso(),
+				manejoFechas.obtenerFechaActual());
 		int diasPorFacturar = calcularDiasPorFacturar(numeroDeHoras);
 		int horasPorFacturar = calcularHorasPorFacturar(numeroDeHoras);
 		
@@ -214,7 +216,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		
 		factura.get().setValor(valorFactura);
 		factura.get().setHoras(numeroDeHoras);
-		factura.get().setFechaSalida(Calendar.getInstance());
+		factura.get().setFechaSalida(manejoFechas.obtenerFechaActual());
 		return factura;
 	}
 	
@@ -303,7 +305,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		if (! factura.isPresent()) {
 			throw new Exception("Factura no encontrada");
 		}
-		factura.get().setFechaSalida(Calendar.getInstance());
+		factura.get().setFechaSalida(manejoFechas.obtenerFechaActual());
 		repositorioFacturas.delete(factura.get());
 		return factura.get();
 	}
@@ -311,5 +313,55 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	public void eliminarVehiculoDelParqueadero(Vehiculo vehiculo) {
 		repositorioVehiculos.deleteById(vehiculo.getPlaca());
 	}
+
+	public RepositorioVehiculos getRepositorioVehiculos() {
+		return repositorioVehiculos;
+	}
+
+	public void setRepositorioVehiculos(RepositorioVehiculos repositorioVehiculos) {
+		this.repositorioVehiculos = repositorioVehiculos;
+	}
+
+	public RepositorioFacturas getRepositorioFacturas() {
+		return repositorioFacturas;
+	}
+
+	public void setRepositorioFacturas(RepositorioFacturas repositorioFacturas) {
+		this.repositorioFacturas = repositorioFacturas;
+	}
+
+	public RepositorioTarifas getRepositorioTarifas() {
+		return repositorioTarifas;
+	}
+
+	public void setRepositorioTarifas(RepositorioTarifas repositorioTarifas) {
+		this.repositorioTarifas = repositorioTarifas;
+	}
+
+	public RepositorioParqueadero getRepositorioParqueaderos() {
+		return repositorioParqueaderos;
+	}
+
+	public void setRepositorioParqueaderos(RepositorioParqueadero repositorioParqueaderos) {
+		this.repositorioParqueaderos = repositorioParqueaderos;
+	}
+
+	public RepositorioTipoVehiculos getRepositorioTipoVehiculos() {
+		return repositorioTipoVehiculos;
+	}
+
+	public void setRepositorioTipoVehiculos(RepositorioTipoVehiculos repositorioTipoVehiculos) {
+		this.repositorioTipoVehiculos = repositorioTipoVehiculos;
+	}
+
+	public ManejoDeFechas getManejoFechas() {
+		return manejoFechas;
+	}
+
+	public void setManejoFechas(ManejoDeFechas manejoFechas) {
+		this.manejoFechas = manejoFechas;
+	}
+	
+	
 
 }

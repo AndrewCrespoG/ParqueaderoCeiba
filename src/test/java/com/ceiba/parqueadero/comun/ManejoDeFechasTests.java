@@ -4,8 +4,17 @@ import java.util.Calendar;
 
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Before;
 
 public class ManejoDeFechasTests {
+	
+	ManejoDeFechas manejoDeFechas;
+	
+	@Before 
+	public void init() {
+		manejoDeFechas = new ManejoDeFechas();
+	}
+	
 	@Test
 	public void calcularHorasEntreDosFechasUnDiaTest() {
 		//Arrange
@@ -14,7 +23,7 @@ public class ManejoDeFechasTests {
 		Calendar fechaFuturo = Calendar.getInstance();
 		int esperado = 24;
 		//Act
-		int actual = ManejoDeFechas.calcularHorasEntreDosFechas(fechaAntigua, fechaFuturo);
+		int actual = manejoDeFechas.calcularHorasEntreDosFechas(fechaAntigua, fechaFuturo);
 		//Assert
 		Assert.assertEquals(esperado, actual);
 	}
@@ -25,8 +34,9 @@ public class ManejoDeFechasTests {
 		fAntigua.add(Calendar.HOUR, -1);
 		Calendar fFuturo = Calendar.getInstance();
 		int esperado = 1;
+		
 		//Act
-		int actual = ManejoDeFechas.calcularHorasEntreDosFechas(fAntigua, fFuturo);
+		int actual = manejoDeFechas.calcularHorasEntreDosFechas(fAntigua, fFuturo);
 		//Assert
 		Assert.assertEquals(esperado, actual);
 	} 
