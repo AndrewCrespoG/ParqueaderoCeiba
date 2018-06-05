@@ -47,7 +47,7 @@ public class ControladorParqueaderoImplTests {
 	public void ingresarVehiculoTest() throws Exception {
 		//Arrange
 		
-		Calendar fechaIngreso = Calendar.getInstance();
+		Calendar fechaIngreso = manejoDeFechas.obtenerFechaActual();
 		
 		TipoVehiculo tipoVehiculo = new TipoVehiculo();
 		tipoVehiculo.setId(0);

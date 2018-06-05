@@ -40,81 +40,18 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	@Autowired
 	private ManejoDeFechas manejoFechas;
 	
-	public void crearParqueaderoPorDefectoSiNoExiste() {
-		Optional<Parqueadero> parqueadero = repositorioParqueaderos.findById("1");
-		if(!parqueadero.isPresent()) {//Si el parqueadero no existe
-			System.out.println("Intenta crear el parqueadero");
-			Parqueadero parqueaderoTemp = new Parqueadero();
-			parqueaderoTemp.setId("1");
-			parqueaderoTemp.setNombreParqueadero("Parqueadero Ceiba");
-			parqueaderoTemp.setNumLugaresAutomovilesDisponibles(20);
-			parqueaderoTemp.setNumLugaresMotocicletasDisponibles(10);
-			repositorioParqueaderos.save(parqueaderoTemp);
-		}
-	}
 	
-	public void crearTarifasDeVehiculoSiNoExisten() {
-		Optional<Tarifa> tarifaAutomoviles = repositorioTarifas.findById(0);
-		if(!tarifaAutomoviles.isPresent()) {//Crea y guarda la tarifa para automoviles
-			System.out.println("Intentando crear la tarifa de autos");
-			Tarifa tarifaTemp = new Tarifa();
-			tarifaTemp.setId(0);
-			TipoVehiculo tipoAutomovil = new TipoVehiculo();
-			tipoAutomovil.setId(0);
-			tipoAutomovil.setNombre("Automovil");
-			tarifaTemp.setTipoVehiculo(tipoAutomovil);
-			tarifaTemp.setValorPorDia(8000.0);
-			tarifaTemp.setValorPorHora(1000.0);
-			repositorioTarifas.save(tarifaTemp);
-		}
-		Optional<Tarifa> tarifaMotos = repositorioTarifas.findById(1);
-		if(!tarifaMotos.isPresent()) {
-			System.out.println("Intentando crear la tarifa de motos");
-			Tarifa tarifaTemp = new Tarifa();
-			tarifaTemp.setId(1);
-			TipoVehiculo tipoAutomovil = new TipoVehiculo();
-			tipoAutomovil.setId(1);
-			tipoAutomovil.setNombre("Motocicleta");
-			tarifaTemp.setTipoVehiculo(tipoAutomovil);
-			tarifaTemp.setValorPorDia(4000.0);
-			tarifaTemp.setValorPorHora(500.0);
-			repositorioTarifas.save(tarifaTemp);
-		}
-	}
-	
-	public void crearTiposDeVehiculosSiNoExisten() {
-		Optional<TipoVehiculo> tipoAutomovil = repositorioTipoVehiculos.findById(0);
-		if(!tipoAutomovil.isPresent()) {
-			System.out.println("Intentando crear el tipo de vehiculo Autos");
-			TipoVehiculo tipoTemp = new TipoVehiculo();
-			tipoTemp.setId(0);
-			tipoTemp.setNombre("Automovil");
-			repositorioTipoVehiculos.save(tipoTemp);
-		}
-		Optional<TipoVehiculo> tipoMotocicleta = repositorioTipoVehiculos.findById(1);
-		if(!tipoMotocicleta.isPresent()) {
-			System.out.println("Intentando crear el tipo de vehiculo Motocicleta");
-			TipoVehiculo tipoTemp = new TipoVehiculo();
-			tipoTemp.setId(1);
-			tipoTemp.setNombre("Motocicleta");
-			repositorioTipoVehiculos.save(tipoTemp);
-		}
-	}
 	
 	@Override
 	public Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception {
-		
-		//Existe el parqueadero y si no, crearlo por defecto
-		//crearParqueaderoPorDefectoSiNoExiste();
-		//crearTiposDeVehiculosSiNoExisten();
-		//crearTarifasDeVehiculoSiNoExisten();
+	
 		
 		Factura factura = new Factura();
 		vehiculo.setPlaca(vehiculo.getPlaca().toUpperCase());//Placa en mayusculas, por si acaso
 		validarPlacaVehiculo(vehiculo);
 		
 		//Mirar el tipo de vehiculo para calcular si hay espacio donde se pueda entrar
-		verificarEspaciosDisponibles(vehiculo);//Que matanza de excepciones xd
+		verificarEspaciosDisponibles(vehiculo);
 		
 		if(repositorioVehiculos.existsById(vehiculo.getPlaca())) {
 			throw new Exception ("El vehiculo ya esta registrado en el parqueadero");
@@ -199,9 +136,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 		}
 		factura = obtenerTotalPorPagar(factura, tarifa, vehiculo);
 		
-		//Tengo hambre
-		//retirarFacturaDelVehiculo(vehiculo.get());
-		//eliminarVehiculoDelParqueadero(vehiculo.get());
+		
 		return factura.get();
 	}
 	

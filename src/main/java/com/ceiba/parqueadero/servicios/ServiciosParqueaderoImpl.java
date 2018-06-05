@@ -55,7 +55,7 @@ public class ServiciosParqueaderoImpl implements ServiciosParquedero{
 	}
 
 	@Override
-    @CrossOrigin(origins="*")
+	@CrossOrigin(origins="*")
 	@RequestMapping(value="/listar-vehiculos", method = RequestMethod.GET)
 	public List<Vehiculo> consultarVehiculosEnParqueadero (String parqueadero){
 		List<Vehiculo> vehiculos = new ArrayList<>();
