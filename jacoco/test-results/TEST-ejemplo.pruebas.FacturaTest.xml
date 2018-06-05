@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ejemplo.pruebas.FacturaTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-05-28T00:10:42" hostname="Andre" time="0.135">
+  <properties/>
+  <testcase name="calcularValorFacturaTest" classname="ejemplo.pruebas.FacturaTest" time="0.135"/>
+  <testcase name="calcularNumeroDeHorasEntreDosFechasTest" classname="ejemplo.pruebas.FacturaTest" time="0.0"/>
+  <system-out><![CDATA[11000.0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
