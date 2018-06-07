@@ -44,8 +44,7 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	
 	@Override
 	public Factura ingresarVehiculo(Vehiculo vehiculo) throws Exception {
-	
-		
+			
 		Factura factura = new Factura();
 		vehiculo.setPlaca(vehiculo.getPlaca().toUpperCase());//Placa en mayusculas, por si acaso
 		validarPlacaVehiculo(vehiculo);
@@ -296,7 +295,5 @@ public class ControladorParquederoImpl implements ControladorParquedero {
 	public void setManejoFechas(ManejoDeFechas manejoFechas) {
 		this.manejoFechas = manejoFechas;
 	}
-	
-	
 
 }
